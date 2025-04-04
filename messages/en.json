@@ -1,0 +1,20 @@
+{
+  "UserForm": {
+    "title": "User form",
+    "name": "Name",
+    "email": "Email",
+    "submit": "Submit",
+    "accountSettings": "Account settings",
+    "username": "Username",
+    "favoritePeople": "Favorite people",
+    "favoritePeopleDescription": "Choose your favorite people! You'll be automatically linked to them in the graph if it is reciprocal.",
+    "quote": "Quote",
+    "quoteDescription": "A quote that represents you",
+    "promoYear": "Graduation year",
+    "promoYearDescription": "Your graduation year might influence your position on the graph",
+    "promoCustom": "Custom promotion description",
+    "promoCustomDescription": "For example: Teachers",
+    "cancel": "Cancel",
+    "save": "Save"
+  }
+}

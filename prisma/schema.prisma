@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+
+  image String?
+
+  providers String[] @default([])
+
+  favoritedBy    User[]   @relation("UserFollows", fields: [favoritedByIDs], references: [id])
+  favoritedByIDs String[] @db.ObjectId
+  favorite     User[]   @relation("UserFollows", fields: [favoriteIDs], references: [id])
+  favoriteIDs  String[] @db.ObjectId
+
+  name     String
+  username String?
+
+  quote String?
+  promo String? @default("2025")
+
+  posts       Post[]    @relation("userPosts")
+  authorPosts Post[]    @relation("authorPosts")
+
+  privacy Privacy @default(PUBLIC)
+}
+
+model Post {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title   String
+  content String
+  image   String?
+
+  authorId String @db.ObjectId
+  author   User   @relation(fields: [authorId], references: [id], name: "authorPosts")
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], name: "userPosts")
+
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+  updatedAt DateTime  @updatedAt
+
+  privacy Privacy?
+}
+
+enum Privacy {
+  PUBLIC
+  PRIVATE
+  PROTECTED
+}

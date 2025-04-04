@@ -1,0 +1,3 @@
+.sidebar-group-custom {
+  @apply text-sm text-gray-700 dark:text-gray-300;
+}
