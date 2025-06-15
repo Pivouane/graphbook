@@ -7,22 +7,48 @@ import { headers } from "next/headers";
 
 function isMutual(pageUser: DbUser, authedUser: authUser) {
   if (!authedUser) return false;
-  return pageUser.favorite?.some(fav => fav.id === authedUser.id) || pageUser.authorPosts.some(post => post.user?.id === authedUser.id) || pageUser.id === authedUser.id;
+  return (
+    pageUser.favorite?.some((fav) => fav.id === authedUser.id) ||
+    pageUser.authorPosts.some((post) => post.user?.id === authedUser.id) ||
+    pageUser.id === authedUser.id
+  );
 }
 
-function restrictPosts(posts: Post[], authedUser: authUser, mutuality: boolean, privacy: "PUBLIC" | "PROTECTED" | "PRIVATE"): Post[] {
-  const base = posts.filter(post => post.privacy === "PUBLIC" || (post.privacy === "PROTECTED" && mutuality));
+function restrictPosts(
+  posts: Post[],
+  authedUser: authUser,
+  mutuality: boolean,
+  privacy: "PUBLIC" | "PROTECTED" | "PRIVATE",
+): Post[] {
+  const base = posts.filter(
+    (post) =>
+      post.privacy === "PUBLIC" || (post.privacy === "PROTECTED" && mutuality),
+  );
 
-  if (privacy === "PUBLIC") return base.concat(posts.filter(post => !post.privacy || post.author?.id === authedUser.id));
-  if (privacy === "PROTECTED") return base.concat(posts.filter(post => (!post.privacy && mutuality) || post.author?.id === authedUser.id));
-  if (privacy === "PRIVATE") return base.concat(posts.filter(post => post.author?.id === authedUser.id));
+  if (privacy === "PUBLIC")
+    return base.concat(
+      posts.filter(
+        (post) => !post.privacy || post.author?.id === authedUser.id,
+      ),
+    );
+  if (privacy === "PROTECTED")
+    return base.concat(
+      posts.filter(
+        (post) =>
+          (!post.privacy && mutuality) || post.author?.id === authedUser.id,
+      ),
+    );
+  if (privacy === "PRIVATE")
+    return base.concat(
+      posts.filter((post) => post.author?.id === authedUser.id),
+    );
 
   return base;
 }
 
 export async function searchUsers(query: string): Promise<any[]> {
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: await headers(),
   });
 
   if (!session) {
@@ -30,14 +56,14 @@ export async function searchUsers(query: string): Promise<any[]> {
   }
 
   const originalQuery = query;
-  const normalizedQuery = query.toLowerCase().replace(/[.\s_-]/g, '');
+  const normalizedQuery = query.toLowerCase().replace(/[.\s_-]/g, "");
 
   let queryParts: string[];
-  if (query.includes('@')) {
-    const [localPart, domain] = query.split('@');
+  if (query.includes("@")) {
+    const [localPart, domain] = query.split("@");
     queryParts = [localPart];
-  } else if (query.includes('.')) {
-    queryParts = query.split('.');
+  } else if (query.includes(".")) {
+    queryParts = query.split(".");
   } else {
     queryParts = query.split(/\s+/);
   }
@@ -45,40 +71,40 @@ export async function searchUsers(query: string): Promise<any[]> {
   const users = await prisma.user.findMany({
     where: {
       OR: [
-        { name: { contains: originalQuery, mode: 'insensitive' } },
-        { username: { contains: originalQuery, mode: 'insensitive' } },
+        { name: { contains: originalQuery, mode: "insensitive" } },
+        { username: { contains: originalQuery, mode: "insensitive" } },
         // { email: { contains: originalQuery, mode: 'insensitive' } },
 
-        { name: { contains: normalizedQuery, mode: 'insensitive' } },
-        { username: { contains: normalizedQuery, mode: 'insensitive' } },
+        { name: { contains: normalizedQuery, mode: "insensitive" } },
+        { username: { contains: normalizedQuery, mode: "insensitive" } },
         // { email: { contains: normalizedQuery, mode: 'insensitive' } },
 
-        ...queryParts.map(part => ({
+        ...queryParts.map((part) => ({
           OR: [
-            { name: { contains: part, mode: 'insensitive' as any } },
-            { username: { contains: part, mode: 'insensitive' as any } },
-            { email: { contains: part, mode: 'insensitive' as any } }
-          ]
-        }))
-      ]
+            { name: { contains: part, mode: "insensitive" as any } },
+            { username: { contains: part, mode: "insensitive" as any } },
+            { email: { contains: part, mode: "insensitive" as any } },
+          ],
+        })),
+      ],
     },
     select: {
       id: true,
       name: true,
       email: true,
       username: true,
-      image: true
+      image: true,
     },
-    take: 10 // Limit results while still getting good matches
+    take: 10, // Limit results while still getting good matches
   });
 
   // Optional post-processing for better ranking
   // Calculate relevance scores for sorting
-  const scoredResults = users.map(user => {
+  const scoredResults = users.map((user) => {
     let score = 0;
-    const normalizedName = (user.name || '').toLowerCase();
-    const normalizedUsername = (user.username || '').toLowerCase();
-    const normalizedEmail = (user.email || '').toLowerCase();
+    const normalizedName = (user.name || "").toLowerCase();
+    const normalizedUsername = (user.username || "").toLowerCase();
+    const normalizedEmail = (user.email || "").toLowerCase();
 
     // Higher score for exact matches
     if (normalizedName === query.toLowerCase()) score += 10;
@@ -91,9 +117,12 @@ export async function searchUsers(query: string): Promise<any[]> {
     if (normalizedEmail.includes(query.toLowerCase())) score += 4;
 
     // Score for normalized matches
-    if (normalizedName.replace(/[.\s_-]/g, '').includes(normalizedQuery)) score += 3;
-    if (normalizedUsername.replace(/[.\s_-]/g, '').includes(normalizedQuery)) score += 3;
-    if (normalizedEmail.replace(/[.\s_-]/g, '').includes(normalizedQuery)) score += 3;
+    if (normalizedName.replace(/[.\s_-]/g, "").includes(normalizedQuery))
+      score += 3;
+    if (normalizedUsername.replace(/[.\s_-]/g, "").includes(normalizedQuery))
+      score += 3;
+    if (normalizedEmail.replace(/[.\s_-]/g, "").includes(normalizedQuery))
+      score += 3;
 
     return { ...user, score };
   });
@@ -106,7 +135,7 @@ export async function searchUsers(query: string): Promise<any[]> {
 }
 export async function fetchUser(id: string): Promise<DbUser | null> {
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: await headers(),
   });
 
   if (!session) {
@@ -118,117 +147,121 @@ export async function fetchUser(id: string): Promise<DbUser | null> {
     return null;
   }
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: id
-    },
-    select: {
-      id: true,
-      email: true,
-      createdAt: true,
-      favorite: {
-        select: {
-          id: true,
-          name: true
-        }
+  const user = await prisma.user
+    .findUnique({
+      where: {
+        id: id,
       },
-      name: true,
-      username: true,
-      quote: true,
-      promo: true,
-      privacy: true,
-      posts: {
-        select: {
-          id: true,
-          title: true,
-          content: true,
-          image: true,
-          createdAt: true,
-          updatedAt: true,
-          deletedAt: true,
-          privacy: true,
-        }
+      select: {
+        id: true,
+        email: true,
+        createdAt: true,
+        favorite: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        name: true,
+        username: true,
+        quote: true,
+        promo: true,
+        privacy: true,
+        posts: {
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            image: true,
+            createdAt: true,
+            updatedAt: true,
+            deletedAt: true,
+            privacy: true,
+          },
+        },
+        authorPosts: {
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            image: true,
+            createdAt: true,
+            updatedAt: true,
+            deletedAt: true,
+            privacy: true,
+            user: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
       },
-      authorPosts: {
-        select: {
-          id: true,
-          title: true,
-          content: true,
-          image: true,
-          createdAt: true,
-          updatedAt: true,
-          deletedAt: true,
-          privacy: true,
-          user: {
-            select: {
-              id: true
-            }
-          }
-        }
-      },
-    }
-  }).catch(() => null);
-
+    })
+    .catch(() => null);
 
   return user;
 }
 
-
-export async function fetchUserAndPosts(id: string): Promise<PublicUser | null> {
+export async function fetchUserAndPosts(
+  id: string,
+): Promise<PublicUser | null> {
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: await headers(),
   });
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: id
-    },
-    select: {
-      id: true,
-      email: true,
-      createdAt: true,
-      favorite: {
-        select: {
-          id: true,
-          name: true
-        }
+  const user = await prisma.user
+    .findUnique({
+      where: {
+        id: id,
       },
-      name: true,
-      username: true,
-      quote: true,
-      promo: true,
-      privacy: true,
-      posts: {
-        select: {
-          id: true,
-          title: true,
-          content: true,
-          image: true,
-          createdAt: true,
-          updatedAt: true,
-          deletedAt: true,
-          privacy: true,
-        }
+      select: {
+        id: true,
+        email: true,
+        createdAt: true,
+        favorite: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        name: true,
+        username: true,
+        quote: true,
+        promo: true,
+        privacy: true,
+        posts: {
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            image: true,
+            createdAt: true,
+            updatedAt: true,
+            deletedAt: true,
+            privacy: true,
+          },
+        },
+        authorPosts: {
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            image: true,
+            createdAt: true,
+            updatedAt: true,
+            deletedAt: true,
+            privacy: true,
+            user: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
       },
-      authorPosts: {
-        select: {
-          id: true,
-          title: true,
-          content: true,
-          image: true,
-          createdAt: true,
-          updatedAt: true,
-          deletedAt: true,
-          privacy: true,
-          user: {
-            select: {
-              id: true
-            }
-          }
-        }
-      },
-    }
-  }).catch(() => null);
+    })
+    .catch(() => null);
 
   if (!user) return null;
 
@@ -245,26 +278,33 @@ export async function fetchUserAndPosts(id: string): Promise<PublicUser | null> 
   const baseUser = {
     id: user.id,
     name: user.name,
-    email: user.email
-  }
+    email: user.email,
+  };
 
   const mutuality = isMutual(user, session.user);
 
-  if (user.privacy === "PUBLIC" || (user.privacy === "PROTECTED" && mutuality)) {
+  if (
+    user.privacy === "PUBLIC" ||
+    (user.privacy === "PROTECTED" && mutuality)
+  ) {
     Object.assign(baseUser, {
       email: user.email,
       createdAt: user.createdAt,
       favorite: user.favorite,
       username: user.username,
       quote: user.quote,
-      promo: user.promo
+      promo: user.promo,
     });
   }
 
   return {
     ...baseUser,
     posts: restrictPosts(user.posts, session.user, mutuality, user.privacy),
-    authorPosts: restrictPosts(user.authorPosts, session.user, mutuality, user.privacy)
-  }
-
+    authorPosts: restrictPosts(
+      user.authorPosts,
+      session.user,
+      mutuality,
+      user.privacy,
+    ),
+  };
 }

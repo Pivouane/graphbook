@@ -1,9 +1,9 @@
-'use server';
+"use server";
 
-import { prisma } from '@/lib/prisma'
-import { Prisma } from '@prisma/client';
-import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function fetchUsers() {
   const users = await prisma.user.findMany({
@@ -13,30 +13,29 @@ export async function fetchUsers() {
       email: true,
       posts: true,
     },
-  })
-  return users
+  });
+  return users;
 }
 
 export async function fetchPosts(userId: string) {
-
   // Get User privacy settings
 
   const user = await prisma.user.findUnique({
     where: {
-      id: userId
+      id: userId,
     },
     select: {
       id: true,
-      privacy: true
-    }
-  })
+      privacy: true,
+    },
+  });
 
   const session = await auth.api.getSession({
-    headers: await headers()
-  })
+    headers: await headers(),
+  });
 
   if (userId !== session?.user?.id) {
-    return []
+    return [];
   }
 
   const posts = await prisma.post.findMany({
@@ -46,7 +45,7 @@ export async function fetchPosts(userId: string) {
         select: {
           name: true,
           email: true,
-        }
+        },
       },
       title: true,
       content: true,
@@ -54,47 +53,53 @@ export async function fetchPosts(userId: string) {
       createdAt: true,
     },
     where: {
-      authorId: session?.user?.id
+      authorId: session?.user?.id,
     },
     orderBy: {
-      createdAt: 'desc'
-    }
+      createdAt: "desc",
+    },
   });
 
-  return posts
+  return posts;
 }
 
-export async function createPost({ title, content, userId }: { title: string, content: string, userId: string }) {
+export async function createPost({
+  title,
+  content,
+  userId,
+}: {
+  title: string;
+  content: string;
+  userId: string;
+}) {
   const session = await auth.api.getSession({
-    headers: await headers()
-  })
-  
-  console.log('Creating post with data:', { title, content, userId, session });
-  
+    headers: await headers(),
+  });
+
+  console.log("Creating post with data:", { title, content, userId, session });
+
   let post: Prisma.PostCreateInput = {
     title,
     content,
     author: {
       connect: {
-        id: session?.user?.id
-      }
+        id: session?.user?.id,
+      },
     },
     user: {
       connect: {
-        id: userId
-      }
-    }
-  }
+        id: userId,
+      },
+    },
+  };
 
-  console.log('Creating post with data:', post);
-
+  console.log("Creating post with data:", post);
 
   const createPost = await prisma.post.create({
-    data: post
-  })
+    data: post,
+  });
 
-  console.log('Post created successfully:', createPost);
+  console.log("Post created successfully:", createPost);
 
-
-  return createPost
+  return createPost;
 }
