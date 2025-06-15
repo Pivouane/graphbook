@@ -29,8 +29,7 @@ export default function PostInput({ userId }: PostInputProps) {
     } finally {
       setIsLoading(false);
     }
-
-  }
+  };
 
   return (
     <div className="p-4 border border-gray-300 rounded-lg shadow-sm bg-white">
@@ -57,4 +56,4 @@ export default function PostInput({ userId }: PostInputProps) {
       </Button>
     </div>
   );
-} 
+}

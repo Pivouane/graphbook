@@ -13,7 +13,7 @@ const intlMiddleware = createMiddleware({
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  if (pathname.startsWith('/dashboard')) {
+  if (pathname.startsWith("/dashboard")) {
     const { data: session } = await betterFetch<Session>(
       "/api/auth/get-session",
       {
@@ -23,18 +23,15 @@ export async function middleware(request: NextRequest) {
         },
       },
     );
-    
+
     if (!session) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
   }
-  
+
   return intlMiddleware(request);
 }
 
 export const config = {
-  matcher: [
-    "/dashboard", 
-    '/((?!api|_next|_vercel|.*\\..*).*)'
-  ],
+  matcher: ["/dashboard", "/((?!api|_next|_vercel|.*\\..*).*)"],
 };

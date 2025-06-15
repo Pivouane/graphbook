@@ -22,7 +22,7 @@ export default function UserProfileContent({
   return (
     <SidebarProvider>
       <ProfileSidebar user={user} />
-      <SidebarTrigger className="fixed z-10"/>
+      <SidebarTrigger className="fixed z-10" />
       <div className="container mx-auto flex flex-col h-screen">
         <div className="flex-1 flex flex-col h-full">
           <Tabs

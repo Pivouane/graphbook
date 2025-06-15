@@ -11,7 +11,9 @@ type FormFieldProps = {
   type?: "text" | "email" | "number" | "textarea";
   disabled?: boolean;
   value: string | number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
   className?: string;
   description?: string | null;
 };
@@ -67,7 +69,9 @@ export default function UserForm({ user }: { user: DbUser }) {
     promoCustom: typeof user.promo === "string" ? user.promo : "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -86,12 +90,12 @@ export default function UserForm({ user }: { user: DbUser }) {
       if (throttledSearchTerm.length < 2) {
         setSearchResults([]);
         return;
-      }  
+      }
 
       setIsSearching(true);
       try {
         const response = await fetch(
-          `/api/users/search?query=${encodeURIComponent(searchTerm)}`
+          `/api/users/search?query=${encodeURIComponent(searchTerm)}`,
         );
         const data = await response.json();
         setSearchResults(data.users);

@@ -1,6 +1,5 @@
-
 /** @type {import('next').NextConfig} */
-const createNextIntlPlugin = require('next-intl/plugin');
+const createNextIntlPlugin = require("next-intl/plugin");
 
 const nextConfig = {
   async redirects() {
@@ -20,9 +19,10 @@ const nextConfig = {
           {
             type: "query",
             key: "session_state",
-          }
+          },
         ],
-        destination: "/api/auth/callback/epita?code=:code&state=:state&session_state=:session_state",
+        destination:
+          "/api/auth/callback/epita?code=:code&state=:state&session_state=:session_state",
       },
     ];
   },

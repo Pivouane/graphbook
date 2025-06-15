@@ -27,28 +27,29 @@ export default function SignInPopup() {
 
   return (
     showPopup && (
-    <div className="flex items-center justify-center h-screen">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold">Is this your first time here?</h1>
-        <p>Log in with your Epita e-mail address</p>
-        <input
-          type="email"
-          placeholder="Email"
-          className="text-black p-2 mt-2 border border-gray-300 rounded-md"
-          ref={emailRef}
-        />
-        <button
-          className="bg-blue-500 text-white rounded-md p-2 mt-2"
-          onClick={async () =>
-            authClient.signIn.magicLink({
-              email: emailRef.current?.value!,
-              name: emailRef.current?.value!.split("@")[0],
-            })
-          }
-        >
-          Sign in
-        </button>
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">Is this your first time here?</h1>
+          <p>Log in with your Epita e-mail address</p>
+          <input
+            type="email"
+            placeholder="Email"
+            className="text-black p-2 mt-2 border border-gray-300 rounded-md"
+            ref={emailRef}
+          />
+          <button
+            className="bg-blue-500 text-white rounded-md p-2 mt-2"
+            onClick={async () =>
+              authClient.signIn.magicLink({
+                email: emailRef.current?.value!,
+                name: emailRef.current?.value!.split("@")[0],
+              })
+            }
+          >
+            Sign in
+          </button>
+        </div>
       </div>
-    </div>)
+    )
   );
 }

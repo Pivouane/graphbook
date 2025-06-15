@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 
 export async function fetchGraphData() {
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: await headers(),
   });
 
   const users = await prisma.user.findMany({
@@ -14,18 +14,18 @@ export async function fetchGraphData() {
       name: true,
       favoriteIDs: true,
       favoritedByIDs: true,
-      image: true
-    }
+      image: true,
+    },
   });
 
   const posts = await prisma.post.groupBy({
-    by: ['userId', 'authorId'],
+    by: ["userId", "authorId"],
     _count: {
-      id: true
-    }
-  })
+      id: true,
+    },
+  });
 
-  const nodes = users.map(user => ({
+  const nodes = users.map((user) => ({
     id: user.id,
     image: user.image || null,
     label: user.id === session?.user?.id ? "You" : user.name,
@@ -33,12 +33,12 @@ export async function fetchGraphData() {
     size: user.id === session?.user?.id ? 20 : 15,
     hover: user.id === session?.user?.id ? "edit" : "view",
     url: user.id === session?.user?.id ? `/users/me` : `/users/${user.id}`,
-  }))
+  }));
 
-  const links: { source: string, target: string, strength: number }[] = []
+  const links: { source: string; target: string; strength: number }[] = [];
 
-  users.forEach(user => {
-    user.favoriteIDs.forEach(fav => {
+  users.forEach((user) => {
+    user.favoriteIDs.forEach((fav) => {
       if (user.id === fav) {
         return;
       }
@@ -46,28 +46,32 @@ export async function fetchGraphData() {
         links.push({
           source: user.id,
           target: fav,
-          strength: 2
-        })
+          strength: 2,
+        });
       }
-    })
+    });
   });
 
-  posts.forEach(post => {
+  posts.forEach((post) => {
     if (post.userId === post.authorId) {
       return;
     }
-    if (links.some(link => link.source === post.userId && link.target === post.authorId)) {
+    if (
+      links.some(
+        (link) => link.source === post.userId && link.target === post.authorId,
+      )
+    ) {
       return;
     }
     links.push({
       source: post.userId,
       target: post.authorId,
-      strength: post._count.id / 10
-    })
-  })
+      strength: post._count.id / 10,
+    });
+  });
 
   return {
     nodes,
-    links
-  }
+    links,
+  };
 }
