@@ -1,4 +1,3 @@
-
 // Global type declarations
 import { Privacy } from "@prisma/client";
 import React from "react";
@@ -10,10 +9,10 @@ declare global {
       [elemName: string]: any;
     }
   }
-  
+
   namespace NodeJS {
     interface ProcessEnv {
-      NODE_ENV: 'development' | 'production' | 'test';
+      NODE_ENV: "development" | "production" | "test";
       DATABASE_URL: string;
       [key: string]: string | undefined;
     }
@@ -35,7 +34,7 @@ interface PostProps {
   title: string;
   content: string;
   image: string | null;
-  author?: { id: string; name?: string; email?: string; };
+  author?: { id: string; name?: string; email?: string };
   user?: { id: string };
   createdAt: Date;
   updatedAt: Date;

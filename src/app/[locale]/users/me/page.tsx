@@ -9,8 +9,12 @@ export default async function MePage() {
   const userId = session?.user?.id;
 
   if (!userId) {
-    return <p className="text-center text-red-500">Please sign in to view your posts.</p>;
+    return (
+      <p className="text-center text-red-500">
+        Please sign in to view your posts.
+      </p>
+    );
   }
 
-  return <PostPage params={{ id: userId, himself : true }} />;
+  return <PostPage params={{ id: userId, himself: true }} />;
 }

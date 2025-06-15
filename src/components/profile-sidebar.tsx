@@ -1,4 +1,3 @@
-
 import { PublicUser } from "@/types/user";
 import {
   Sidebar,
@@ -6,7 +5,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarTrigger
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { pascalCase } from "@/lib/utils";
 
@@ -28,11 +27,7 @@ export default function ProfileSidebar({ user }: { user: PublicUser }) {
         </span>
       </SidebarHeader>
       <SidebarContent className="space-y-2">
-        {user.email && (
-          <LeftSidebarGroup>
-            email: {user.email}
-          </LeftSidebarGroup>
-        )}
+        {user.email && <LeftSidebarGroup>email: {user.email}</LeftSidebarGroup>}
         {user.createdAt && (
           <LeftSidebarGroup>
             {/* user since: {user.createdAt.toDateString()} */}
@@ -40,20 +35,10 @@ export default function ProfileSidebar({ user }: { user: PublicUser }) {
           </LeftSidebarGroup>
         )}
         {user.username && (
-          <LeftSidebarGroup>
-            username: {user.username}
-          </LeftSidebarGroup>
+          <LeftSidebarGroup>username: {user.username}</LeftSidebarGroup>
         )}
-        {user.quote && (
-          <LeftSidebarGroup>
-            quote: {user.quote}
-          </LeftSidebarGroup>
-        )}
-        {user.promo && (
-          <LeftSidebarGroup>
-            promo: {user.promo}
-          </LeftSidebarGroup>
-        )}
+        {user.quote && <LeftSidebarGroup>quote: {user.quote}</LeftSidebarGroup>}
+        {user.promo && <LeftSidebarGroup>promo: {user.promo}</LeftSidebarGroup>}
       </SidebarContent>
     </Sidebar>
   );

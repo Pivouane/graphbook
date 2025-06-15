@@ -2,7 +2,11 @@ import { fetchUser, fetchUserAndPosts } from "@/app/actions/users";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import UserProfileContent from "@/components/user-profile-content";
 
-export default async function PostPage({ params }: { params: { id: string, himself?: boolean }}) {
+export default async function PostPage({
+  params,
+}: {
+  params: { id: string; himself?: boolean };
+}) {
   const { id: userId, himself } = params;
 
   let user;
@@ -13,12 +17,11 @@ export default async function PostPage({ params }: { params: { id: string, himse
     user = await fetchUserAndPosts(userId);
   }
 
-  
   console.log(user);
 
   if (!user) {
     return <p className="text-center text-red-500">User not found.</p>;
   }
 
-  return <UserProfileContent user={user!} edit={himself}/>;
+  return <UserProfileContent user={user!} edit={himself} />;
 }
