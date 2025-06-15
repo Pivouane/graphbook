@@ -32,7 +32,7 @@ export async function fetchGraphData() {
     sub: user.id === session?.user?.id ? "You" : initials(user.name),
     size: user.id === session?.user?.id ? 20 : 15,
     hover: user.id === session?.user?.id ? "edit" : "view",
-    url: user.id === session?.user?.id ? `/users/me` : `/users/${user.id}`,
+    url: user.id === session?.user?.id ? "/users/me" : `/users/${user.id}`,
   }))
 
   const links: { source: string, target: string, strength: number }[] = []
