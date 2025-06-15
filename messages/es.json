@@ -1,0 +1,12 @@
+
+{
+  "Index": {
+    "title": "Bienvenido a la aplicación",
+    "description": "Esta es una aplicación de ejemplo."
+  },
+  "Navigation": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "profile": "Perfil"
+  }
+}

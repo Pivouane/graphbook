@@ -1,3 +1,4 @@
+
 import { EmailTemplate } from '../../../components/email-template';
 import { Resend } from 'resend';
 
@@ -9,7 +10,7 @@ export async function POST() {
       from: 'Acme <onboarding@resend.dev>',
       to: ['delivered@resend.dev'],
       subject: 'Hello world',
-      react: EmailTemplate({ firstName: 'John' }),
+      react: EmailTemplate({ firstName: 'John' }) as React.ReactElement,
     });
 
     if (error) {

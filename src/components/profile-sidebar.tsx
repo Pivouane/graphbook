@@ -1,10 +1,12 @@
+
 import { PublicUser } from "@/types/user";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarHeader
+  SidebarHeader,
+  SidebarTrigger
 } from "@/components/ui/sidebar";
 import { pascalCase } from "@/lib/utils";
 
@@ -34,6 +36,7 @@ export default function ProfileSidebar({ user }: { user: PublicUser }) {
         {user.createdAt && (
           <LeftSidebarGroup>
             {/* user since: {user.createdAt.toDateString()} */}
+            user since: {new Date(user.createdAt).toDateString()}
           </LeftSidebarGroup>
         )}
         {user.username && (

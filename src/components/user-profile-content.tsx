@@ -22,59 +22,79 @@ export default function UserProfileContent({
   return (
     <SidebarProvider>
       <ProfileSidebar user={user} />
-      <SidebarTrigger />
-      <div className="container mx-auto py-2 flex flex-col min-h-screen">
+      <SidebarTrigger className="fixed z-10"/>
+      <div className="container mx-auto flex flex-col h-screen">
         <div className="flex-1 flex flex-col h-full">
-        <Tabs defaultValue={edit ? "edit" : "apropos"} className="w-full" onValueChange={setSelectedTab}>
-          <TabsList className="justify-center mx-auto space-x-4 font-semibold text-gray-700 dark:text-gray-300 flex w-max">
-            {edit && <TabsTrigger value="edit">Edit</TabsTrigger>}
-            <TabsTrigger value="apropos">
-              On {pascalCase(user!.name)}
-            </TabsTrigger>
-            <TabsTrigger value="authored">
-              By {pascalCase(user!.name)}
-            </TabsTrigger>
-          </TabsList>
-          {edit && (
-            <TabsContent value="edit" className="text-center space-y-4">
-              <div className="text-center space-y-4 overflow-y-auto">
-                <UserForm user={user as DbUser} />
+          <Tabs
+            defaultValue={edit ? "edit" : "apropos"}
+            className="w-full h-full flex flex-col"
+            onValueChange={setSelectedTab}
+          >
+            <TabsList
+              className="justify-center mx-auto space-x-4 font-semibold text-gray-700 dark:text-gray-300 flex w-max"
+              style={{ height: "50px" }}
+            >
+              {edit && <TabsTrigger value="edit">Edit</TabsTrigger>}
+              <TabsTrigger value="apropos">
+                On {pascalCase(user!.name)}
+              </TabsTrigger>
+              <TabsTrigger value="authored">
+                By {pascalCase(user!.name)}
+              </TabsTrigger>
+            </TabsList>
+            {edit && (
+              <TabsContent
+                value="edit"
+                className="text-center"
+                style={{ maxHeight: "calc(100vh - 50px)", overflowY: "auto" }}
+              >
+                <div className="flex-1 overflow-y-auto px-4 pb-4">
+                  <UserForm user={user as DbUser} />
+                </div>
+              </TabsContent>
+            )}
+            <TabsContent
+              value="apropos"
+              className="text-center space-y-4"
+              style={{ maxHeight: "calc(100vh - 400px)", overflowY: "auto" }}
+            >
+              <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-4">
+                {user?.posts.length === 0 ? (
+                  <div className="space-y-2 flex flex-col items-center">
+                    <p>
+                      No one has posted anything about {firstName(user!.name)}{" "}
+                      yet.
+                    </p>
+                    <p>Be the first to post about {firstName(user!.name)}!</p>
+                  </div>
+                ) : (
+                  user?.posts.map((post) => <Post key={post.id} post={post} />)
+                )}
               </div>
             </TabsContent>
+            <TabsContent
+              value="authored"
+              className="text-center"
+              style={{ maxHeight: "calc(100vh - 400px)", overflowY: "auto" }}
+            >
+              <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-4">
+                {user?.authorPosts.length === 0 ? (
+                  <div className="space-y-2 flex flex-col items-center">
+                    <p>{firstName(user!.name)} has not posted anything yet.</p>
+                  </div>
+                ) : (
+                  user?.authorPosts.map((post) => (
+                    <Post key={post.id} post={post} />
+                  ))
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+          {selectedTab !== "edit" && (
+            <div className="sticky bottom-0 bg-white dark:bg-gray-900 pt-2 pb-4 border-t border-gray-200 dark:border-gray-800">
+              <PostInput userId={user.id} />
+            </div>
           )}
-          <TabsContent value="apropos" className="text-center space-y-4">
-            <div className="text-center space-y-4">
-              {user?.posts.length === 0 ? (
-                <div className="space-y-2 flex flex-col items-center">
-                  <p>
-                    No one has posted anything about {firstName(user!.name)}{" "}
-                    yet.
-                  </p>
-                  <p>Be the first to post about {firstName(user!.name)}!</p>
-                </div>
-              ) : (
-                user?.posts.map((post) => <Post key={post.id} post={post} />)
-              )}
-            </div>
-          </TabsContent>
-          <TabsContent value="authored" className="text-center">
-            <div className="text-center space-y-4">
-              {user?.authorPosts.length === 0 ? (
-                <div className="space-y-2 flex flex-col items-center">
-                  <p>{firstName(user!.name)} has not posted anything yet.</p>
-                </div>
-              ) : (
-                user?.authorPosts
-                  .map((post) => <Post key={post.id} post={post} />)
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
-        {selectedTab !== "edit" && (
-          <div className="mt-auto sticky bottom-0">
-            <PostInput userId={user.id} />
-          </div>
-        )}
         </div>
       </div>
     </SidebarProvider>

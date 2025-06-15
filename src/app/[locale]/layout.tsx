@@ -1,3 +1,4 @@
+
 import "./globals.css";
 
 import { Geist, Geist_Mono } from "next/font/google";
@@ -39,12 +40,19 @@ export default async function RootLayout({
     notFound();
   }
 
+  let messages;
+  try {
+    messages = (await import(`../../../messages/${locale}.json`)).default;
+  } catch (error) {
+    notFound();
+  }
+
   return (
     <html lang={locale}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}
       >
-        <NextIntlClientProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <SignInPopup />
           <div className="w-full h-screen bg-white dark:bg-gray-900">
             <main className="w-full h-full">{children}</main>
