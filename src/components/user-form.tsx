@@ -28,7 +28,7 @@ const FormField: React.FC<FormFieldProps> = ({
   onChange,
   className = "",
   description,
-  eraserCross = false
+  eraserCross = false,
 }) => (
   <div className="flex flex-col space-y-1">
     <label htmlFor={id} className="font-semibold">
@@ -54,11 +54,22 @@ const FormField: React.FC<FormFieldProps> = ({
         className={`p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none transition ${className}`}
       />
     )}
-    {eraserCross && <span 
-    style={{ position: "relative", top: "-2.2rem", left: "calc(100% - 2.5rem)", width: "1.5rem", textAlign: "center"}}
-    id={`eraser-cross-${id}`}
-    className="text-red-500 ml-2 cursor-pointer"
-    onClick={() => onChange({ target: { name: id, value: "" } })}>✕</span>}
+    {eraserCross && (
+      <span
+        style={{
+          position: "relative",
+          top: "-2.2rem",
+          left: "calc(100% - 2.5rem)",
+          width: "1.5rem",
+          textAlign: "center",
+        }}
+        id={`eraser-cross-${id}`}
+        className="text-red-500 ml-2 cursor-pointer"
+        onClick={() => onChange({ target: { name: id, value: "" } })}
+      >
+        ✕
+      </span>
+    )}
     {description && <p className="text-sm text-gray-500">{description}</p>}
   </div>
 );
@@ -67,7 +78,7 @@ import isEqual from "lodash.isequal";
 
 export default function UserForm({ user }: { user: DbUser }) {
   const t = useTranslations("UserForm");
-  
+
   const initialFormData = {
     name: user.name || "",
     email: user.email || "",
@@ -79,12 +90,14 @@ export default function UserForm({ user }: { user: DbUser }) {
   };
   const [formData, setFormData] = useState(initialFormData);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  
+
   useEffect(() => {
     setHasUnsavedChanges(!isEqual(formData, initialFormData));
   }, [formData]);
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -157,16 +170,16 @@ export default function UserForm({ user }: { user: DbUser }) {
       favorite: user.favorite,
       quote: user.quote,
       promo: user.promo,
-    }
+    };
 
     const dataToSubmit = {
       ...prevUserData,
       username: formData.username,
-      favorite: formData.favoritePeople ? formData.favoritePeople
-        .split(",")
-        .map((id) => ({
-          id: id.trim()
-        })) : [],
+      favorite: formData.favoritePeople
+        ? formData.favoritePeople.split(",").map((id) => ({
+            id: id.trim(),
+          }))
+        : [],
       quote: formData.quote,
       promo: formData.promoCustom || formData.promoYear,
       id: user.id,
@@ -184,8 +197,7 @@ export default function UserForm({ user }: { user: DbUser }) {
         console.log("User updated successfully:", data);
         if (data.error) {
           throw new Error(data.error);
-        }
-        else {
+        } else {
           window.location.reload();
         }
       })

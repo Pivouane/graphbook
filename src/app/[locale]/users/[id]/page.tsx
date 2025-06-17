@@ -2,7 +2,11 @@ import { fetchUser, fetchUserAndPosts } from "@/app/actions/users";
 // import { SidebarProvider } from "@/components/ui/sidebar";
 import UserProfileContent from "@/components/user-profile-content";
 
-export default async function PostPage({ params }: { params: { id: string, himself?: boolean }}) {
+export default async function PostPage({
+  params,
+}: {
+  params: { id: string; himself?: boolean };
+}) {
   const { id: userId, himself } = await params;
 
   let user;

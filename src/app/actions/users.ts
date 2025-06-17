@@ -309,9 +309,12 @@ export async function fetchUserAndPosts(
   };
 }
 
-export async function updateOwnUser(id: string, data: Partial<DbUser>): Promise<Partial<DbUser> | null> {
+export async function updateOwnUser(
+  id: string,
+  data: Partial<DbUser>,
+): Promise<Partial<DbUser> | null> {
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: await headers(),
   });
 
   if (!session || session.user.id !== id) {
@@ -327,10 +330,12 @@ export async function updateOwnUser(id: string, data: Partial<DbUser>): Promise<
       quote: data.quote ? data.quote?.trim() : undefined,
       promo: data.promo ? data.promo.toString().trim() : undefined,
       privacy: data.privacy || "PUBLIC",
-      favorite: data.favorite ? {
-        set: data.favorite.map(fav => ({ id: fav.id })),
-      } : undefined,
-    }
+      favorite: data.favorite
+        ? {
+            set: data.favorite.map((fav) => ({ id: fav.id })),
+          }
+        : undefined,
+    },
   });
 
   const updatedUser = await prisma.user.findUnique({
@@ -347,10 +352,10 @@ export async function updateOwnUser(id: string, data: Partial<DbUser>): Promise<
       favorite: {
         select: {
           id: true,
-          name: true
-        }
-      }
-    }
+          name: true,
+        },
+      },
+    },
   });
 
   return updatedUser;
