@@ -12,6 +12,7 @@
     "quoteDescription": "A quote that represents you",
     "promoYear": "Graduation year",
     "promoYearDescription": "Your graduation year might influence your position on the graph",
+    "unsavedChangesWarning": "You have unsaved changes. Be sure to save them before leaving.",
     "promoCustom": "Custom promotion description",
     "promoCustomDescription": "For example: Teachers",
     "cancel": "Cancel",

@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { DbUser, PublicUser, UserSearchResult } from "@/types/user";
+import { DbUser, PublicUser } from "@/types/user";
 import { Post } from "@/types/post";
 import { User as authUser } from "better-auth";
 import { headers } from "next/headers";
@@ -307,4 +307,51 @@ export async function fetchUserAndPosts(
       user.privacy,
     ),
   };
+}
+
+export async function updateOwnUser(id: string, data: Partial<DbUser>): Promise<Partial<DbUser> | null> {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
+  if (!session || session.user.id !== id) {
+    return null;
+  }
+
+  console.log("Updating user:", id, data);
+
+  await prisma.user.update({
+    where: { id },
+    data: {
+      username: data.username ? data.username.trim() : undefined,
+      quote: data.quote ? data.quote?.trim() : undefined,
+      promo: data.promo ? data.promo.toString().trim() : undefined,
+      privacy: data.privacy || "PUBLIC",
+      favorite: data.favorite ? {
+        set: data.favorite.map(fav => ({ id: fav.id })),
+      } : undefined,
+    }
+  });
+
+  const updatedUser = await prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      username: true,
+      quote: true,
+      promo: true,
+      privacy: true,
+      createdAt: true,
+      favorite: {
+        select: {
+          id: true,
+          name: true
+        }
+      }
+    }
+  });
+
+  return updatedUser;
 }

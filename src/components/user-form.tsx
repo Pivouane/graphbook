@@ -16,6 +16,7 @@ type FormFieldProps = {
   ) => void;
   className?: string;
   description?: string | null;
+  eraserCross?: boolean;
 };
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -27,6 +28,7 @@ const FormField: React.FC<FormFieldProps> = ({
   onChange,
   className = "",
   description,
+  eraserCross = false
 }) => (
   <div className="flex flex-col space-y-1">
     <label htmlFor={id} className="font-semibold">
@@ -52,26 +54,37 @@ const FormField: React.FC<FormFieldProps> = ({
         className={`p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none transition ${className}`}
       />
     )}
+    {eraserCross && <span 
+    style={{ position: "relative", top: "-2.2rem", left: "calc(100% - 2.5rem)", width: "1.5rem", textAlign: "center"}}
+    id={`eraser-cross-${id}`}
+    className="text-red-500 ml-2 cursor-pointer"
+    onClick={() => onChange({ target: { name: id, value: "" } })}>✕</span>}
     {description && <p className="text-sm text-gray-500">{description}</p>}
   </div>
 );
 
+import isEqual from "lodash.isequal";
+
 export default function UserForm({ user }: { user: DbUser }) {
   const t = useTranslations("UserForm");
-
-  const [formData, setFormData] = useState({
+  
+  const initialFormData = {
     name: user.name || "",
     email: user.email || "",
     username: user.username || "",
     favoritePeople: user.favorite?.map((f) => f.id).join(", ") || "",
     quote: user.quote || "",
     promoYear: user.promo || 2025,
-    promoCustom: typeof user.promo === "string" ? user.promo : "",
-  });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+    promoCustom: Number.isNaN(Number(user.promo)) ? user.promo || "" : "",
+  };
+  const [formData, setFormData] = useState(initialFormData);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  
+  useEffect(() => {
+    setHasUnsavedChanges(!isEqual(formData, initialFormData));
+  }, [formData]);
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -139,14 +152,24 @@ export default function UserForm({ user }: { user: DbUser }) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const prevUserData = {
+      username: user.username,
+      favorite: user.favorite,
+      quote: user.quote,
+      promo: user.promo,
+    }
+
     const dataToSubmit = {
-      ...user,
+      ...prevUserData,
       username: formData.username,
-      favorite: formData.favoritePeople
+      favorite: formData.favoritePeople ? formData.favoritePeople
         .split(",")
-        .map((name) => ({ name: name.trim() })),
+        .map((id) => ({
+          id: id.trim()
+        })) : [],
       quote: formData.quote,
       promo: formData.promoCustom || formData.promoYear,
+      id: user.id,
     };
 
     fetch("/api/users/update", {
@@ -158,15 +181,18 @@ export default function UserForm({ user }: { user: DbUser }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.success) {
-          alert(t("updateSuccess")); // FIXME: use toast
-        } else {
-          alert(t("updateError")); // FIXME: use toast
+        console.log("User updated successfully:", data);
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        else {
+          window.location.reload();
         }
       })
       .catch((error) => {
         console.error("Error updating user:", error);
-        alert(t("updateError"));
+        const alertMessage = "" + t("updateError") + `\n${error.message}` + "";
+        alert(alertMessage);
       });
   };
 
@@ -298,10 +324,16 @@ export default function UserForm({ user }: { user: DbUser }) {
           value={formData.promoCustom}
           onChange={handleChange}
           description={t("promoCustomDescription")}
+          eraserCross={formData.promoCustom !== ""}
         />
       </div>
 
       <div className="flex justify-end mt-4 space-x-3">
+        {hasUnsavedChanges && (
+          <div className="px-4 py-2 bg-yellow-100 border border-gray-300 rounded-lg hover:bg-gray-100 transition">
+            {t("unsavedChangesWarning")}
+          </div>
+        )}
         <button
           type="button"
           className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
