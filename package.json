@@ -1,0 +1,50 @@
+{
+  "name": "graphbook",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "eslint src --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit",
+    "check-intl": "ts-node --project tsconfig.json scripts/check-intl.mts",
+    "check": "npm run typecheck && npm run lint && npm run check-intl",
+    "start": "next start",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@better-fetch/fetch": "^1.1.21",
+    "@prisma/client": "^6.19.2",
+    "better-auth": "^1.4.19",
+    "clsx": "^2.1.1",
+    "d3": "^7.9.0",
+    "next": "16.1.6",
+    "next-intl": "^4.8.3",
+    "prisma": "^6.19.2",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/d3": "^7.4.3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
+}
