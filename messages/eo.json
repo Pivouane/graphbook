@@ -1,0 +1,56 @@
+{
+  "graph": {
+    "you": "Vi",
+    "allPromos": "Ĉiuj promoj"
+  },
+  "auth": {
+    "subtitle": "Ensalutu al via konto",
+    "placeholder": "Enigu vian retpoŝtadreson",
+    "sent": "Ensaluta ligilo estis sendita al via retpoŝtadreso.",
+    "sentDescription": "Kontrolu vian retpoŝtkeston kaj alklaku la ligilon por ensaluti.",
+    "error": "Eraro okazis dum sendado de la ensaluta ligilo.",
+    "sending": "Sendante...",
+    "submit": "Sendi ensalutan ligilon"
+  },
+  "userSidebar": {
+    "promo": "Promo",
+    "settings": "Agordoj"
+  },
+  "userProfile": {
+    "posts": "Afiŝoj",
+    "noPosts": "Neniuj afiŝoj ankoraŭ.",
+    "post": "Afiŝi",
+    "posting": "Sendante...",
+    "postPlaceholder": "Skribu mesaĝon...",
+    "delete": "Forigi"
+  },
+  "userSettings": {
+    "title": "Miaj agordoj",
+    "description": "Administru vian profilon kaj favoratojn ĉi tie. (ĝis 3 favoratoj permesitaj)",
+    "viewMyProfile": "Reen al mia profilo",
+    "profileForm": {
+      "title": "Redakti mian profilon",
+      "avatarURL": "URL de profilbildo",
+      "avatarURLPlaceholder": "http://wikimedia.org/wikipedia/assets/...",
+      "username": "Uzantnomo",
+      "usernamePlaceholder": "via_uzantnomo",
+      "quote": "Citaĵo",
+      "quotePlaceholder": "Profila citaĵo...",
+      "promo": "Promo",
+      "promoPlaceholder": "2025",
+      "saveChanges": "Konservi ŝanĝojn",
+      "saving": "Konservante...",
+      "saved": "Profilo ĝisdatigita ✓"
+    },
+    "favoritesManager": {
+      "title": "Administri miajn favoratojn",
+      "searchPlaceholder": "Serĉi uzanton por aldoni kiel favoraton...",
+      "adding": "Aldonante...",
+      "add": "Aldoni",
+      "removing": "Forigante...",
+      "remove": "Forigi",
+      "noFavorites": "Neniuj favoratoj ankoraŭ.",
+      "maxFavoritesReached": "Vi atingis la maksimuman nombron de favoratoj."
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "graph": {
+    "you": "You",
+    "allPromos": "All promos"
+  },
+  "auth": {
+    "subtitle": "Sign in to your account",
+    "placeholder": "Enter your email address",
+    "sent": "A login link has been sent to your email address.",
+    "sentDescription": "Check your inbox and click the link to sign in.",
+    "error": "An error occurred while sending the login link.",
+    "sending": "Sending...",
+    "submit": "Send login link"
+  },
+  "userSidebar": {
+    "promo": "Promo",
+    "settings": "Settings"
+  },
+  "userProfile": {
+    "posts": "Posts",
+    "noPosts": "No posts yet.",
+    "post": "Post",
+    "posting": "Posting...",
+    "postPlaceholder": "Write a message...",
+    "delete": "Delete"
+  },
+  "userSettings": {
+    "title": "My settings",
+    "description": "Manage your profile and favorites here. (up to 3 favorites allowed)",
+    "viewMyProfile": "Back to my profile",
+    "profileForm": {
+      "title": "Edit my profile",
+      "avatarURL": "Profile picture URL",
+      "avatarURLPlaceholder": "http://wikimedia.org/wikipedia/assets/...",
+      "username": "Username",
+      "usernamePlaceholder": "your_username",
+      "quote": "Quote",
+      "quotePlaceholder": "Profile quote...",
+      "promo": "Promo",
+      "promoPlaceholder": "2025",
+      "saveChanges": "Save changes",
+      "saving": "Saving...",
+      "saved": "Profile updated ✓"
+    },
+    "favoritesManager": {
+      "title": "Manage my favorites",
+      "searchPlaceholder": "Search for a user to add as favorite...",
+      "adding": "Adding...",
+      "add": "Add",
+      "removing": "Removing...",
+      "remove": "Remove",
+      "noFavorites": "No favorites yet.",
+      "maxFavoritesReached": "You have reached the maximum number of favorites."
+    }
+  }
+}

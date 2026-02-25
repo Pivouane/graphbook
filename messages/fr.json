@@ -1,0 +1,56 @@
+{
+  "graph": {
+    "you": "Toi",
+    "allPromos": "Toutes les promos"
+  },
+  "auth": {
+    "subtitle": "Connection au compte",
+    "placeholder": "Entre ton adresse e-mail",
+    "sent": "Un lien de connexion a été envoyé à ton adresse e-mail.",
+    "sentDescription": "Vérifie ta boîte de réception et clique sur le lien pour te connecter.",
+    "error": "Une erreur s'est produite lors de l'envoi du lien de connexion.",
+    "sending": "Envoi...",
+    "submit": "Envoyer le lien de connexion"
+  },
+  "userSidebar": {
+    "promo": "Promo",
+    "settings": "Paramètres"
+  },
+  "userProfile": {
+    "posts": "Publications",
+    "noPosts": "Aucune publication pour le moment.",
+    "post": "Poster",
+    "posting": "Envoi...",
+    "postPlaceholder": "Écrire un message...",
+    "delete": "Supprimer"
+  },
+  "userSettings": {
+    "title": "Paramètres",
+    "description": "Gestion du profil et des favoris ici. (jusqu'à 3 favoris autorisés)",
+    "viewMyProfile": "Retour au profil",
+    "profileForm": {
+      "title": "Modifier mon profil",
+      "avatarURL": "URL de la photo de profil",
+      "avatarURLPlaceholder": "http://wikimedia.org/wikipedia/assets/...",
+      "username": "Nom d'utilisateur",
+      "usernamePlaceholder": "ton_username",
+      "quote": "Citation",
+      "quotePlaceholder": "Citation du profil...",
+      "promo": "Promo",
+      "promoPlaceholder": "2025",
+      "saveChanges": "Sauvegarder les modifications",
+      "saving": "Sauvegarde en cours...",
+      "saved": "Profil mis à jour ✓"
+    },
+    "favoritesManager": {
+      "title": "Gérer mes favoris",
+      "searchPlaceholder": "Rechercher un utilisateur à ajouter en favori...",
+      "adding": "Ajout en cours...",
+      "add": "Ajouter",
+      "removing": "Retrait en cours...",
+      "remove": "Retirer",
+      "noFavorites": "Aucun favori pour le moment.",
+      "maxFavoritesReached": "Nombre maximum de favoris atteint."
+    }
+  }
+}
