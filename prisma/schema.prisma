@@ -8,17 +8,17 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  email         String   @unique
-  emailVerified Boolean
-  name          String
-  username      String?
-  imageURL      String?
-  quote         String?
-  promo         String?  @default("2025")
-  activeModules String[] @default([])
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  email           String         @unique
+  emailVerified   Boolean
+  name            String
+  username        String?
+  imageURL        String?
+  quote           String?
+  promo           String?        @default("2025")
+  activeModules   UserActiveModule[] @relation("UserActiveModules")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
   favoritedBy    User[]   @relation("UserFollows", fields: [favoritedByIDs], references: [id])
   favoritedByIDs String[] @db.ObjectId
@@ -28,8 +28,19 @@ model User {
   authorPosts  Post[] @relation("authorPosts")
   profilePosts Post[] @relation("profilePosts")
 
-  sessions      Session[]
-  accounts      Account[]
+  sessions Session[]
+  accounts Account[]
+}
+
+model UserActiveModule {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  slug      String
+  args      Json?
+  userId    String   @db.ObjectId
+  user      User     @relation("UserActiveModules", fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, slug])
 }
 
 model Post {

@@ -2,8 +2,9 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma/client";
 import { auth } from "@/lib/auth/server";
 import { headers } from "next/headers";
-import { UserSidebar } from "./components/sidebar";
-import { PostWall } from "./components/post-wall";
+import { ModuleRunner } from "@/components/modules/runner";
+import { getActiveModulePayloads } from "@/lib/modules/client";
+import { ModuleSession, ModuleUser } from "@/modules/types";
 
 interface Props {
   params: Promise<{ id: string; locale: string }>;
@@ -33,14 +34,15 @@ export default async function UserProfilePage({ params }: Props) {
   if (!user) notFound();
 
   const session = await auth.api.getSession({ headers: await headers() });
-  const isOwner = session?.user?.id === user.id;
+
+  const activePayloads = await getActiveModulePayloads(user.id);
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <UserSidebar user={user} isOwner={isOwner} />
-      <main className="flex-1 overflow-y-auto p-6">
-        <PostWall profileId={user.id} currentUserId={session?.user?.id} />
-      </main>
+    <div className="w-full h-screen overflow-hidden">
+      <ModuleRunner
+        activeModules={activePayloads}
+        context={{ profileUser: user as ModuleUser, currentSession: (session as ModuleSession) ?? null }}
+      />
     </div>
   );
 }

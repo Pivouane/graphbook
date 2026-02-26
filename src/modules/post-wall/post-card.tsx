@@ -1,5 +1,6 @@
+"use client";
 import Image from "next/image";
-import { deletePost } from "./actions";
+import { deletePost } from "../../app/[locale]/users/[id]/components/actions";
 import { useTranslations } from "next-intl";
 
 const DEFAULT_AVATAR = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
@@ -51,7 +52,7 @@ export function PostCard({ post, currentUserId, profileId }: Props) {
         </div>
         <div className="flex items-center gap-3">
           <span className="text-xs text-gray-400">
-            {new Date(post.createdAt).toLocaleDateString()}
+            {new Date(post.createdAt).toISOString().slice(0, 19).replace("T", " ")}
           </span>
           {canDelete && (
             <form action={deletePost}>

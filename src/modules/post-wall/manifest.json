@@ -1,0 +1,12 @@
+{
+  "slug": "post-wall",
+  "name": "Post Wall",
+  "description": "Displays posts on a user's profile, with a form to write new ones.",
+  "default": true,
+  "args": {
+    "position": "BOTTOM",
+    "direction": "TOP_TO_BOTTOM",
+    "height": "h-full",
+    "width": "w-200"
+  }
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createPost } from "./actions";
+import { createPost } from "../../app/[locale]/users/[id]/components/actions";
 import { clsx } from "clsx";
 import { useTranslations } from "next-intl";
 

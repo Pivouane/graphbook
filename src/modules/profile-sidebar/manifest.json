@@ -1,0 +1,9 @@
+{
+  "slug": "profile-sidebar",
+  "name": "Profile Sidebar",
+  "description": "Displays user info: avatar, name, promo, quote and settings link.",
+  "default": true,
+  "args": {
+    "position": "LEFT"
+  }
+}
