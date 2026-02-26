@@ -118,3 +118,7 @@ npm run check-intl   # Validate i18n keys are in sync across all locales
 npm run check        # Run all checks (typecheck + lint + check-intl)
 ```
 
+## Contributing
+
+Contributions are welcome! Read the [contributing guide](CONTRIBUTING.md) to learn how to write a module.
+Either way, feel free to open issues for bugs or feature requests, or just to say hi. I built this for fun and to learn, so any feedback is appreciated. :)
