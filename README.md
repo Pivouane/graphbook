@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Graphbook
+
+> Your yearbook on a graph, an open-source social network for big nerds that once were students.
+
+Graphbook is a collaborative platform where students can connect, explore relationships through an interactive graph, and post on each other's profiles. The interface and modules are community-driven: anyone can open a PR to contribute a new theme or feature module. (Work in progress...)
+
+## Features
+
+- **Interactive graph**: visualize connections between students with proximity based on mutual favorites and post interactions.
+- **Magic link auth**: sign in with your university email address, no password required
+- **User profiles**: cute profile pictures, custom promo groups, quotes, and a wall (just like skyblogs)
+- **Modules** — activate community-contributed modules on your profile (music player, custom sections, open pull requests if you have ideas!)
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Auth | better-auth (magic link) |
+| Database | MongoDB Atlas + Prisma 6 |
+| Graph | D3.js |
+| i18n | next-intl |
+| Styling | Tailwind CSS |
+| Language | TypeScript (strict) |
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+
+- npm
+- A MongoDB Atlas cluster
+
+### Installation
+
+```bash
+git clone https://github.com/your-username/graphbook.git
+cd graphbook
+npm install
+```
+
+### Environment variables
+
+Copy `.env.example` to `.env` and fill in the values:
+
+```bash
+cp .env.example .env
+```
+
+```env
+DATABASE_URL="mongodb+srv://<user>:<password>@<cluster>.mongodb.net/graphbook"
+
+BETTER_AUTH_SECRET="generate with: openssl rand -base64 32"
+BETTER_AUTH_URL="http://localhost:3000"
+BETTER_AUTH_FEDERATED_EMAIL_DOMAINS="univ.fr,univ2.fr" # comma-separated list of allowed email domains for magic link sign-in
+
+NEXT_PUBLIC_BETTER_AUTH_URL="http://localhost:3000"
+```
+
+### Database setup
+
+```bash
+npx prisma db push
+npx prisma generate
+```
+
+### Run locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── [locale]/           # Localized routes (fr, en, eo)
+│   │   |── layout.tsx      # Main layout
+│   │   ├── page.tsx        # Graph homepage
+│   │   |── actions/
+│   │   |   └── graph.ts    # Fetch graph data action
+│   │   ├── sign-in/        # Auth page
+│   │   └── users/          # Profile pages + settings
+│   └── api/auth/           # better-auth API route
+├── components/
+│   ├── auth/               # Magic link form
+│   ├── d3/                 # Graph component
+├── hooks/
+├── i18n/                   # next-intl routing + config
+├── lib/
+│   ├── auth/               # better-auth server + client config
+│   ├── prisma/             # Prisma client
+│   └── utils.ts            # Utility functions
+├── styles/
+│   └── globals.css         # Global styles
+messages/                   # Translation files (feel free to contribute new locales and fix existing ones!)
+├── en.json
+├── fr.json
+└── eo.json
+prisma/
+└── schema.prisma
+scripts/
+└── check-intl.ts           # i18n key sync validator
+```
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## Available Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run dev          # Start development server
+npm run build        # Production build
+npm run typecheck    # TypeScript type checking
+npm run lint         # ESLint
+npm run check-intl   # Validate i18n keys are in sync across all locales
+npm run check        # Run all checks (typecheck + lint + check-intl)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
